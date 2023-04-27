@@ -15,7 +15,7 @@
     "react-dom": "^18.2.0",
     "@iconify/react": "^4.0.0",
     "@mui/icons-material": "^5.10.16",
-    "@mui/lab": "^5.0.0-alpha.109",
+    "@mui/lab": "^5.0.0-alpha.109",    
     "@mui/material": "^5.10.15",
     "@mui/x-data-grid": "^5.17.25",
     "@mui/x-date-pickers": "^5.0.9",

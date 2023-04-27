@@ -2,9 +2,21 @@ import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
+import getMasterDB from './database/getMasterDB'
+import InvoiceForm from './invoiceForm'
 
 function App() {
   const [count, setCount] = useState(0)
+  const handleCountOnClick = async (e) => {
+    console.log(getMasterDB())
+    const oldCount = await getMasterDB().get('clickCount')
+    console.log(oldCount)
+    getMasterDB().put({
+      ...oldCount,
+      _id: 'clickCount', 
+      count: (oldCount?.count || 0) + 1
+    })
+  }
 
   return (
     <>
@@ -18,16 +30,14 @@ function App() {
       </div>
       <h1>Vite + React</h1>
       <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
+        <button onClick={handleCountOnClick}>
           count is {count}
         </button>
         <p>
           Edit <code>src/App.jsx</code> and save to test HMR
         </p>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <InvoiceForm/>
     </>
   )
 }
