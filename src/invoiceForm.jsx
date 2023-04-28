@@ -1,5 +1,6 @@
-import React, { useEffect } from 'react'
+import React, { useEffect , useState } from 'react'
 import { useForm ,useFieldArray} from 'react-hook-form';
+import getMasterDB from './database/getMasterDB';
 // import { Button } from '@mui/material'
 
 export default function InvoiceForm() {
@@ -22,18 +23,68 @@ export default function InvoiceForm() {
     }
   })
 
+  const [ masterDB , setMasterDB ] = useState();
+  const [ reload , reloadPage ] = useState()
+  
   const { register, handleSubmit, formState, watch, reset } = form;
   const { errors,isSubmitSuccessful } = formState;
   // const watchForm = watch();
-
+  
   useEffect(() => {
     if (isSubmitSuccessful) {
+      reloadPage()
       reset()
     }
   }, [isSubmitSuccessful, reset])
+  
+  useEffect( () => {
+    const getData = async () => {
+      // if master database is not created, create one and store it in masterDB
+      if (!masterDB) {
+        let tempMasterDB = await getMasterDB();
+        console.log('getting masterDB');
+        setMasterDB(tempMasterDB);
+      }
+      // if database exists
+      if (masterDB) {
+        await masterDB.allDocs().then(async (doc) => {
+          console.log({doc});
+          // if database is empty, set data to empty array in invoice _id
+          if (doc.total_rows == 0){
+            await masterDB
+            .put({
+              _id: 'invoice',
+              dataArray: [],
+            }).then((data) => {
+              console.log({data});
+            });
+          };
+        })
+        // if database have one invoice in it, get all docs
+        await masterDB.get('invoice').then((doc) => {
+          let invoiceArray = doc.dataArray;
+          console.log({invoiceArray});        
+        })
+      }
+    }
+    getData();
+  }, [masterDB , reload])
 
-  const onSubmit = data => console.log(data);
-  // console.log(errors);
+  // when form is submitted, append data to pouchDB
+  const onSubmit = async (values) => {
+    console.log({values});
+    console.log('%c', {values}, 'background: #222; color: #bada55');
+    await masterDB.get('invoice').then(async (doc) => {
+      // previous data 
+      console.log({doc})
+      let newDataArray = doc.dataArray;
+      // appending new values to previous data array
+      newDataArray.push(values)
+      console.log({newDataArray})
+      // update masterDB
+      await masterDB.put(doc)
+    })
+  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate>
