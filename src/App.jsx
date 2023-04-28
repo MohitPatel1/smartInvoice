@@ -3,18 +3,19 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 import getMasterDB from './database/getMasterDB'
-import InvoiceForm from './invoiceForm'
+// import InvoiceForm from './invoiceForm'
 
 function App() {
   const [count, setCount] = useState(0)
   const handleCountOnClick = async (e) => {
     console.log(getMasterDB())
-    const oldCount = await getMasterDB().get('clickCount')
-    console.log(oldCount)
+    // const oldCount = await getMasterDB().get('clickCount')
+    // console.log(oldCount)
     getMasterDB().put({
-      ...oldCount,
+      // ...oldCount,
       _id: 'clickCount', 
-      count: (oldCount?.count || 0) + 1
+      // count: (oldCount?.count || 0) + 1
+      count: 1
     })
   }
 
@@ -37,7 +38,7 @@ function App() {
           Edit <code>src/App.jsx</code> and save to test HMR
         </p>
       </div>
-      <InvoiceForm/>
+      {/* <InvoiceForm/> */}
     </>
   )
 }
