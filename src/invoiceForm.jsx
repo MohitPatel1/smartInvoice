@@ -35,14 +35,21 @@ export default function InvoiceForm() {
     }
   }, [isSubmitSuccessful, reset])
 
-  const onSubmit = data => console.log(data);
+  const onSubmit = data => console.log(data)
 
   const changeAmount = (e, index) => {
     const data = getValues()
     const { product } = data;
     const { quantity, rate } = product[index];
     setValue(`product.${index}.amount`, quantity * rate)
-    changeTotal();
+    console.log({data})
+    const total = data.product.reduce((total , current) => {
+      return total += current.amount
+    },0)
+    console.log({total})
+    setValue('total',total)
+    // changeTotal();
+
   }
 
   const changeTotal = () => {
@@ -147,7 +154,7 @@ export default function InvoiceForm() {
                   <div className="form-control">
                     <label htmlFor="productAmount">Amount:</label>
                     <input type="number" name={`productAmount-${index}`} id={`productAmount-${index}`} {...register(`product.${index}.amount`, {
-                      disabled: true,
+                      // disabled: true,
                       valueAsNumber: true,
                     })} />
                   </div>
