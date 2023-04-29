@@ -15,7 +15,7 @@ export default function InvoiceForm() {
   const form = useForm({
     defaultValues: {
       product: [{
-        image: null,
+        image: '',
         id: '',
         name: '',
         quantity: 0,
@@ -94,8 +94,10 @@ export default function InvoiceForm() {
       console.log({ doc })
       let newDataArray = doc.dataArray;
       // appending new values to previous data array
+      values.product.image = image;
       newDataArray.push(values)
       console.log({ newDataArray })
+      doc.dataArray = newDataArray
       // update masterDB
       await masterDB.put(doc)
     });
