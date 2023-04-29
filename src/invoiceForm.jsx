@@ -23,10 +23,10 @@ export default function InvoiceForm() {
     }
   });
 
-  const { getValues , onChange } = useFormContext();
+  const { onChange } = useFormContext();
   const [ masterDB , setMasterDB ] = useState();
   const [ reload , reloadPage ] = useState()
-  const { register, handleSubmit, formState, watch, reset } = form;
+  const { register, handleSubmit, formState, watch, reset , getValues } = form;
   // const { onChange, onBlur, name, ref } = register('quantity'); 
   const { errors,isSubmitSuccessful } = formState;
   // const watchForm = watch();
@@ -92,8 +92,8 @@ export default function InvoiceForm() {
 
   // onChange functions of forms
   const handleQuantityChange = () => {
-    const quantity = getValues('productQuantity');
-    console.log({quantity});
+    const quantity = getValues();
+    // console.log({quantity});
   }
 
   return (
