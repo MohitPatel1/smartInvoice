@@ -19,7 +19,7 @@ import {
   
   // ----------------------------------------------------------------------
   
-  const ChosenComponent = (props: any) => {
+  const ChosenComponent = (props) => {
     const { choice } = props;
     const Component = pdfComponents[choice] || pdfComponents.emptyComponent;
     // console.log(Component);
@@ -27,7 +27,7 @@ import {
   };
   
   // Create Document Component
-  const InvoicePdf = ({ invObj, salesManObj }: any) => {
+  const DemoInvoice = ({ invObj, salesManObj }) => {
     Font.register({
       family: 'Roboto',
       fonts: [{ src: '/fonts/Roboto-Regular.ttf' }, { src: '/fonts/Roboto-Bold.ttf' }],
@@ -37,9 +37,7 @@ import {
       fonts: [{ src: '/fonts/Roboto-Bold.ttf' }],
     });
   
-    const ogDefaults: any = ogDefaultsCache.getItem();
-    const userObj = userObjCache.getItem();
-    const ogData: any = ogDataCache.getItem();
+   
     console.log({invObj});
     const documentProps = {
       title: `Invoice Form - ${invObj?.buyerDetails?.companyName} - ${
@@ -56,30 +54,6 @@ import {
       pageMode: "useThumbs",
       // onRender : func
     };
-    const headerChoice =
-      ogDefaults?.headerAndFooter?.invoiceFormHeader ||
-      ogDefaults?.headerAndFooter?.defaultHeader ||
-      appLevelDefaults?.defaultHeader;
-    const footerChoice =
-      ogDefaults?.headerAndFooter?.invoiceFormFooter ||
-      ogDefaults?.headerAndFooter?.defaultFooter ||
-      appLevelDefaults?.defaultFooter;
-  
-      const actualQtyUoms = Object.keys(invObj?.grandTotalProductQuantity?.actualQuantity || {});
-      const billedQtyUoms = Object.keys(invObj?.grandTotalProductQuantity?.billedQuantity || {});
-      const pdfData = {
-        totalActualQuantity: Object.values(invObj?.grandTotalProductQuantity?.actualQuantity || {}).reduce((sum: number, qtyNum: any) => (sum + Number(qtyNum || 0)), 0),
-        totalActualQuantityUom: (actualQtyUoms.length === 1) ? actualQtyUoms[0] : "",
-        totalBilledQuantity: Object.values(invObj?.grandTotalProductQuantity?.billedQuantity || {}).reduce((sum: number, qtyNum: any) => (sum + Number(qtyNum || 0)), 0),
-        totalBilledQuantityUom: (billedQtyUoms.length === 1) ? billedQtyUoms[0] : "",
-        bankDetails: invObj?.supplierDetails?.bankDetails && {
-          bankName: invObj.supplierDetails.bankDetails[0]?.bankName,
-          bankAccountNumber: invObj.supplierDetails.bankDetails[0]?.bankAccountNumber,
-          bankIfsc : invObj.supplierDetails.bankDetails[0]?.bankIfsc
-        }
-        
-      };
-    
     return (
       // @ts-ignore
       <Document {...documentProps}>
@@ -88,11 +62,11 @@ import {
         <ChosenComponent
               choice={headerChoice}
               headerRightStrings={[
-                `Agt. Ref. No. : ${invObj?.serialNumber}`,
-                `Agt. Ref. Date : ${invObj?.voucherDate && fDate(invObj?.voucherDate)}`,
+                `Agt. Ref. No. : DI0000223-24`,
+                `Agt. Ref. Date : 21-04-2023`,
               ]}
-              ogData={ogData}
-              ownerObj={invObj.owner}
+              // ogData={ogData}
+              // ownerObj={invObj.owner}
               fixed={true}
               styles={pdfStyles}
             />
@@ -106,25 +80,15 @@ import {
             <View style={{ width: "60%", alignItems: "flex-start",marginLeft:2 }}>
               <View style={{marginLeft:25}}>
                 <Text style={{fontSize:9}}>
-                  {Boolean(invObj?.buyerDetails?.addressDetails) &&
-                    `${invObj?.buyerDetails?.addressDetails[0]?.address || ""}  ${
-                      (invObj?.buyerDetails?.addressDetails[0]?.pinCode &&
-                        `- ${invObj?.buyerDetails?.addressDetails[0]?.pinCode}`) ||
-                      ""
-                    }`}
+                  B-6 DAYANAND COLONY, LAJPAT NAGAR-4, TOWN HALL,CHANDNI CHOCK, DELHI - 11024
                 </Text>
-                
-                {Boolean(invObj?.buyerDetails?.addressDetails && invObj?.buyerDetails?.addressDetails[0]) && (
-                  <Text style={{fontSize:9}}>Branch: {invObj.buyerDetails.addressDetails[0]?.branch || ""}</Text>
-                )}
-                {Boolean(invObj?.buyerDetails?.gstNumber) && (
+                  <Text style={{fontSize:9}}>Branch: Main</Text>
                   <View>
-                    <Text style={{fontSize:9}}>GSTIN: {invObj.buyerDetails.gstNumber}</Text>
-                    <Text style={{fontSize:9}}>State Code : <Text style={{fontSize:9,textTransform: 'uppercase'}}>{formatGstStateCode(invObj.buyerDetails.gstNumber)} </Text></Text>
+                    <Text style={{fontSize:9}}>GSTIN: 07ATNPB9726C1ZP</Text>
+                    <Text style={{fontSize:9}}>State Code: 07-DELHI</Text>
                   </View>
-                  )}
-                  <Text style={{fontSize:9}}>Sub Broker: {invObj?.buyerDetails?.subBrokerDetails?.companyName||""}</Text>
-                  <Text style={{fontSize:10}}>Sales Man : <Text style={{fontSize: 10,marginLeft:5,fontFamily:"Roboto-bold"}}>{invObj?.salesMan?.userName?.toUpperCase()}</Text></Text>
+                  <Text style={{fontSize:9}}>Sub Broker: LAKSHMI AGENCY</Text>
+                  <Text style={{fontSize:10}}>Sales Man :AGENCY SALESMAN</Text>
               </View>
               </View>
             </View>
@@ -142,39 +106,18 @@ import {
                       <Text style={{fontSize:10}}>:</Text>
                     </View>
                     <View style={{flexDirection:'column',alignItems:'flex-start',paddingLeft:3,paddingRight:3}}>
-                      <Text style={{marginRight:5,fontFamily:"Roboto-bold",fontSize:10,textAlign:"left"}}>{invObj?.supplierInvoiceNumber}</Text>
-                      <Text style={{marginRight:5,fontFamily:"Roboto-bold",fontSize:10,textAlign:'left'}}>{invObj?.supplierInvoiceDate && fDate(invObj?.supplierInvoiceDate)}</Text>
-                      <Text style={{marginRight:5,fontFamily:"Roboto-bold",fontSize:10,textAlign:'left'}}>{invObj?.againstOrder?.serialNumber||"-"}</Text>
-                      <Text style={{marginRight:5,fontFamily:"Roboto-bold",fontSize:10,textAlign:'left'}}>{invObj?.againstOrder?.buyerOrderNumber||"-"}</Text>
+                      <Text style={{marginRight:5,fontFamily:"Roboto-bold",fontSize:10,textAlign:"left"}}>SI789</Text>
+                      <Text style={{marginRight:5,fontFamily:"Roboto-bold",fontSize:10,textAlign:'left'}}>21-04-2023</Text>
+                      <Text style={{marginRight:5,fontFamily:"Roboto-bold",fontSize:10,textAlign:'left'}}>-</Text>
+                      <Text style={{marginRight:5,fontFamily:"Roboto-bold",fontSize:10,textAlign:'left'}}>-</Text>
                 </View>
             </View>
           </View>
-          <Text style={{fontSize:9,overflow:'hidden'}}>Sent by : <Text style={{fontSize: 10,marginLeft:5,fontFamily:"Roboto-bold"}}>{invObj?.supplierDetails?.companyName || ""}</Text> {Boolean(invObj?.buyerDetails?.addressDetails) &&
-                    `${invObj?.supplierDetails?.addressDetails[0]?.address || ""}  ${
-                      (invObj?.supplierDetails?.addressDetails[0]?.pinCode &&
-                        `- ${invObj?.supplierDetails?.addressDetails[0]?.pinCode}`) ||
-                      ""
-                    }`}</Text>
-          
-                {Boolean(invObj?.supplierDetails?.gstNumber) && (
+          <Text style={{fontSize:9,overflow:'hidden'}}>Sent by : BALAJI GARMENTS TEENAL CHOCK BHANDARA ROAD ITWARI -440001</Text>
                   <View>
-                    <Text style={{fontSize:9,marginLeft:35}}>GSTIN: {invObj.supplierDetails.gstNumber}</Text>
-                    <Text style={{fontSize:9}}>State Code : <Text style={{fontSize:9,textTransform: 'uppercase'}}>{formatGstStateCode(invObj.supplierDetails.gstNumber)} </Text></Text>
-                  </View>
-                  )}
-          <Text style={{fontSize: 10,fontWeight: 700}}>Transport Details:</Text>
-          <View style={{...pdfStyles.gridContainer,marginBottom:3}}>
-                <View style={{flexDirection:'column',marginLeft:20}}>
-                  {Boolean(invObj?.deliveryDetails[0]) && invObj?.deliveryDetails.map((transport:any,index:number)=>(
-                    <View style={{flexDirection:'row'}}>
-                      <Text style={{fontSize: 9,fontWeight: 700,width:'55%'}}>{index+1}. <Text style={{fontSize: 9,marginLeft:5,fontFamily:"Roboto-bold"}}>{transport?.companyName}{" - "}{transport?.branchName}</Text></Text>
-                      <Text style={{marginLeft:7,fontSize: 10,fontWeight: 700}}>LR No. : <Text style={{fontSize: 9,marginLeft:5,fontFamily:"Roboto-bold"}}>{transport?.consignmentNumber}</Text></Text>
-                      <Text style={{marginLeft:7,fontSize: 10,fontWeight: 700}}>Case No. : <Text style={{fontSize: 9,marginLeft:5,fontFamily:"Roboto-bold"}}>{ transport?.numberOfBale}</Text></Text>
-                      <Text style={{marginLeft:7,fontSize: 10,fontWeight: 700}}>LR Date : <Text style={{fontSize: 9,marginLeft:5,fontFamily:"Roboto-bold"}}>{transport?.consignmentDate && fDate(transport?.consignmentDate)}</Text></Text>
-                    </View>
-                  ))}
-            </View>
-          </View>
+                    <Text style={{fontSize:9,marginLeft:35}}>GSTIN: 07ATNPB9726C1ZP</Text>
+                    <Text style={{fontSize:9}}>State Code : 07-DELHI</Text>
+                  </View>      
           <View style={{ flexDirection: "row", textAlign: "center", ...pdfStyles.bottomBorder,...pdfStyles.topBorder }}>
                 {/* @ts-ignore */}
               <Text style={{ width: "6%", padding: 1, textTransform: 'none' }}>Sr.</Text>
@@ -187,7 +130,7 @@ import {
               <Text style={{ width: "20%", ...pdfStyles.tableCell }}>Amount</Text>
           </View>
           {Boolean(invObj?.products) && Boolean(invObj?.products[0]?.amount||invObj?.products[0]?.actualQuantity ||invObj?.products[0]?.billedQuantity|| invObj?.products[0]?.description)
-              && invObj.products.map((product:any, prodIndex:number) =>
+              && invObj.products.map((product, prodIndex) =>
                 <Fragment>
                 <View  key={prodIndex} wrap style={{ flexDirection: "row", fontSize: 10, textAlign: "center",borderTopWidth: (prodIndex > 0) && invObj.products[prodIndex-1]?.variationsBreakdown && invObj.products[prodIndex-1]?.variationsBreakdown[0].name ?1:0}}>
                     <Text style={{ width: "6%", padding: 1 }}>{prodIndex + 1}</Text>
@@ -204,14 +147,14 @@ import {
                     <Text style={{ width: "10%", ...pdfStyles.tableCell, textTransform: 'uppercase' }}>{((product.minPrice && product.maxPrice)||invObj?.priceRangeCheckBox)?`${product.minPrice} to ${product.maxPrice}`:product.price||""}</Text>
                     <Text style={{ width: "20%", ...pdfStyles.tableCell ,textTransform: 'uppercase', textAlign:"right"}}>{fIndianFormat(product?.amount)}</Text>
                 </View>
-                {Boolean(product?.variationsBreakdown) && Boolean(product?.variationsBreakdown[0]) && Boolean(product?.variationsBreakdown[0]?.name)&& product.variationsBreakdown.some((product:any)=> product.price||product.quantity) && (
+                {Boolean(product?.variationsBreakdown) && Boolean(product?.variationsBreakdown[0]) && Boolean(product?.variationsBreakdown[0]?.name)&& product.variationsBreakdown.some((product)=> product.price||product.quantity) && (
                   <View style={{ flexDirection: "row", ...pdfStyles.topBorder }} wrap>
                       <View style={{ width: "9%", flexDirection: "column", ...pdfStyles.rightBorder, textAlign: "center" }}>
                           <Text style={{ ...pdfStyles.bottomBorder, padding: 1 }}>Size</Text>
                           <Text style={{ ...pdfStyles.bottomBorder, padding: 1 }}>Qty</Text>
                           <Text style={{ padding: 1 }}>Price</Text>
                       </View>
-                      {product.variationsBreakdown.map((sizeDetails:any, sizeIndex:number) =>
+                      {product.variationsBreakdown.map((sizeDetails, sizeIndex) =>
                               <View key={sizeDetails.name + sizeIndex} style={{ flexDirection: "column", ...pdfStyles.rightBorder, textAlign: "center" }}>
                               <View style={{ ...pdfStyles.bottomBorder, paddingHorizontal: 4 }} >
                                   <Text style={{ margin:"auto", padding: 1 }}>{sizeDetails.name || "-"}</Text>
@@ -266,14 +209,14 @@ import {
                     </View>
                     <View style={{flexDirection:'row', justifyContent:'flex-end', minWidth: "25%"}}>
                       <View style={{flexDirection:'column',alignItems:'flex-end', marginRight:2}}>
-                        {invObj?.otherCharges.some((otherCharge:any)=>otherCharge?.chargeAmount) && invObj?.otherCharges.map((otherCharge:any,index:number)=>(
+                        {invObj?.otherCharges.some((otherCharge)=>otherCharge?.chargeAmount) && invObj?.otherCharges.map((otherCharge,index)=>(
                           <Text style={{fontSize:10}}>{otherCharge?.chargeName}{otherCharge?.chargePercent?`@${Math.abs(otherCharge?.chargePercent)}%`:""}{" "}:</Text>
                         ))}
                         <Text style={{fontSize:10}}>Taxable Amt.{" "}:</Text>
                         <Text style={{fontSize:10}}>Tax (GST){" "}:</Text>
                       </View>
                       <View style={{flexDirection:'column',alignItems:'flex-end'}}>
-                        {invObj?.otherCharges.some((otherCharge:any)=>otherCharge?.chargeAmount) && invObj?.otherCharges.map((otherCharge:any,index:number)=>(
+                        {invObj?.otherCharges.some((otherCharge)=>otherCharge?.chargeAmount) && invObj?.otherCharges.map((otherCharge,index)=>(
                           <Text style={{alignItems:"flex-end",fontFamily:"Roboto-bold",fontSize:10}}>{fIndianFormat((otherCharge?.chargeAmount&&otherCharge?.chargeAmount?.toFixed(2))||0)}</Text>
                         ))}
                         <Text style={{fontFamily:"Roboto-bold",fontSize:10}}>{fIndianFormat((invObj?.grandTotalGrossAmount && invObj?.grandTotalGrossAmount?.toFixed(2))||0)}</Text>   
@@ -336,11 +279,11 @@ import {
         {Boolean(invObj?.products) && Boolean(invObj?.products[0]?.amount||invObj?.products[0]?.actualQuantity ||invObj?.products[0]?.billedQuantity|| invObj?.products[0]?.description) && Boolean(invObj?._attachments) && Boolean(Object.keys(invObj?._attachments || {}).length!==0)&&(
         <Page size="A4" orientation="portrait" style={[pdfStyles.page]}>
         <View wrap>
-          {Object.values(invObj?._attachments || {}).some((attmObj: any) => Boolean(attmObj?.data?.preview)) && (
+          {Object.values(invObj?._attachments || {}).some((attmObj) => Boolean(attmObj?.data?.preview)) && (
                   <View>
                       <Text style={{ ...pdfStyles.bold500, marginVertical: 10 }}>Images:</Text>
                     <View style={{ marginTop: 10 }}>
-                        {Object.values(invObj?.products || {}).map((prodObj, prodIndex:any, array:any) =>
+                        {Object.values(invObj?.products || {}).map((prodObj, prodIndex, array) =>
                         ((prodIndex % 4) === 0 &&
                             <View key={prodIndex} style={{ flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
                                 {console.log({ prodIndex })}
@@ -369,4 +312,4 @@ import {
     );
   };
   
-  export default InvoicePdf;
+  export default DemoInvoice;
