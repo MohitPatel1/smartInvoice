@@ -7,6 +7,8 @@ import { useForm, FormProvider, useFormContext, useFieldArray } from "react-hook
 import getMasterDB from './database/getMasterDB';
 // material UI
 import { Autocomplete, Button, TextField } from '@mui/material';
+// react router dom
+import { useNavigate } from "react-router-dom";
 
 export default function InvoiceForm() {
   // let methods = useForm();
@@ -32,7 +34,7 @@ export default function InvoiceForm() {
   const [masterDB, setMasterDB] = useState();
   const [reload, reloadPage] = useState()
   const { register, handleSubmit, formState, watch, reset, control, setValue, getValues } = form;
-  // const { onChange, onBlur, name, ref } = register('quantity'); 
+  const navigate = useNavigate();
   const { errors, isSubmitSuccessful, isValid, isSubmitting } = formState;
   console.log('errors', errors)
 
@@ -142,8 +144,10 @@ export default function InvoiceForm() {
           sx={{ width: 300 }}
           renderInput={(params) => <TextField {...params} label="Existing Buyers" />}
 
-        />
-        <Button className='addbuyer-button' id='addbuyer-button' variant="outlined">Add Buyer</Button>
+      />
+      <Button className='addbuyer-button'id='addbuyer-button' variant="outlined" onClick={()=>navigate("/addBuyer")}>
+        Add Buyer
+      </Button>
       </div>
       <div className='products-container'>
         <h1>Products</h1>
