@@ -1,19 +1,11 @@
+import { Button } from '@mui/material';
 import React, { useEffect, useState } from 'react'
 import { useForm, useFieldArray } from 'react-hook-form';
-// import { Button } from '@mui/material'
 
 export default function InvoiceForm() {
 
   const form = useForm({
     defaultValues: {
-      buyer: {
-        name: '',
-        address: '',
-        contact: {
-          number: '',
-          email: ''
-        }
-      },
       product: [{
         id: '',
         name: '',
@@ -45,59 +37,16 @@ export default function InvoiceForm() {
 
   const onSubmit = data => console.log(data);
 
-  const changeAmount = (e,index) => {
+  const changeAmount = (e, index) => {
     const data = getValues()
-    const {product}=data;
-    const {quantity,rate}=product[index]
-    setValue(`product.${index}.amount`,quantity*rate)
+    const { product } = data;
+    const { quantity, rate } = product[index]
+    setValue(`product.${index}.amount`, quantity * rate)
     // console.log({quantity,rate})
   }
 
   return (
     <form id='form' onSubmit={handleSubmit(onSubmit)} noValidate>
-      <div className="form-control">
-        <label htmlFor="buyerName">Buyer:</label>
-        <input type="text" id='buyerName' {...register('buyer.name', {
-          required: {
-            value: true,
-            message: 'Buyer name is required',
-          }
-        })} />
-        <p className='error'>{errors.buyer?.name?.message}</p>
-      </div>
-
-      <div className="form-control">
-        <label htmlFor="buyerAddress">Buyer's address:</label>
-        <input type="text" id='buyerAddress' {...register('buyer.address', {
-          disabled: watch('buyer.name') === "",
-          required: {
-            value: true,
-            message: 'Buyer\'s address is required',
-          }
-        })} />
-        <p className='error'>{errors.buyer?.address?.message}</p>
-      </div>
-
-      <div className="form-control">
-        <label htmlFor="buyerNumber">Buyer's number:</label>
-        <input type="text" id='buyerNumber' {...register('buyer.contact.number', {
-          disabled: watch('buyer.name') === "",
-        })} />
-        <p className='error'>{errors.buyer?.contact?.number?.message}</p>
-      </div>
-
-      <div className="form-control">
-        <label htmlFor="buyerEmail">Buyer's email:</label>
-        <input type="email" id='buyerEmail' {...register('buyer.contact.email', {
-          disabled: watch('buyer.name') === "",
-          pattern: {
-            value: /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
-            message: 'Invalid email format'
-          }
-        })} />
-        <p className='error'>{errors.buyer?.contact?.email?.message}</p>
-      </div>
-
       <div className='products-container'>
         <h1>Products</h1>
         <div>
@@ -131,23 +80,12 @@ export default function InvoiceForm() {
                   <div className="form-control">
                     <label htmlFor="productName">Name:</label>
                     <input type="text" id={`productName-${index}`} {...register(`product.${index}.name`, {
-                      disabled: watch(`product.${index}.id`) === "",
-                      required: {
-                        value: true,
-                        message: 'Product name is required',
-                      }
                     })} />
-                    <p className='error'>{errors.product && errors.product[index]?.name?.message}</p>
                   </div>
 
                   <div className="form-control">
                     <label htmlFor="productSize">Size:</label>
                     <select id={`productSize-${index}`} {...register(`product.${index}.size`, {
-                      disabled: watch(`product.${index}.id`) === "",
-                      required: {
-                        value: true,
-                        message: 'Product size is required',
-                      }
                     })}>
                       <option value="">-- Select Size --</option>
                       <option value="XS">XS</option>
@@ -156,48 +94,28 @@ export default function InvoiceForm() {
                       <option value="L">L</option>
                       <option value="XL">XL</option>
                     </select>
-
-                    <p className='error'>{errors.product && errors.product[index]?.size?.message}</p>
                   </div>
 
                   <div className="form-control">
                     <label htmlFor="productColor">Color:</label>
                     <input type="text" id={`productColor-${index}`} {...register(`product.${index}.color`, {
-                      disabled: watch(`product.${index}.id`) === "",
-                      required: {
-                        value: true,
-                        message: 'Product color is required',
-                      }
                     })} />
-                    <p className='error'>{errors.product && errors.product[index]?.color?.message}</p>
                   </div>
 
                   <div className="form-control">
                     <label htmlFor="productQuantity">Quantity:</label>
                     <input type="number" name={`productQuantity-${index}`} id={`productQuantity-${index}`} {...register(`product.${index}.quantity`, {
-                      disabled: watch(`product.${index}.id`) === "",
                       valueAsNumber: true,
-                      onChange:(e)=>changeAmount(e,index),
-                      required: {
-                        value: true,
-                        message: 'Product quantity is required',
-                      }
+                      onChange: (e) => changeAmount(e, index),
                     })} />
-                    <p className='error'>{errors.product && errors.product[index]?.quantity?.message}</p>
                   </div>
 
                   <div className="form-control">
                     <label htmlFor="productRate">Rate:</label>
                     <input type="number" name={`productRate-${index}`} id={`productRate-${index}`} onBlur={() => changeAmount()} {...register(`product.${index}.rate`, {
-                      disabled: watch(`product.${index}.id`) === "",
                       valueAsNumber: true,
-                      onChange:(e)=>changeAmount(e,index),
-                      required: {
-                        value: true,
-                        message: 'Product rate is required',
-                      }
+                      onChange: (e) => changeAmount(e, index),
                     })} />
-                    <p className='error'>{errors.product && errors.product[index]?.rate?.message}</p>
                   </div>
 
                   <div className="form-control">
@@ -207,13 +125,16 @@ export default function InvoiceForm() {
                       valueAsNumber: true,
                     })} />
                   </div>
-
-                  {index > 0 && <button type='button' onClick={() => remove(index)}>Remove</button>}
+                  <br />
+                  {/* {index > 0 && <button type='button' onClick={() => remove(index)}>Remove</button>} */}
+                  {index > 0 && <Button variant="contained" onClick={() => remove(index)} color="secondary">
+                    Remove
+                  </Button>}
                 </div>
               )
             })
           }
-          <button type='button' onClick={() => append({
+          <Button variant="contained" onClick={() => append({
             id: '',
             name: '',
             quantity: 1,
@@ -221,7 +142,7 @@ export default function InvoiceForm() {
             size: '',
             color: '',
             amount: 0,
-          })}>Add product</button>
+          })}>Add product</Button>
         </div>
       </div>
 
@@ -232,14 +153,10 @@ export default function InvoiceForm() {
           disabled: true,
         })} />
       </div>
-
-      <button disabled={!isValid || isSubmitting}>Submit</button>
-      <button type='button' onClick={() => reset()}>Reset</button>
-
-      {/* <Button type='submit' variant='contained' color='primary' >
+      <br />
+      <Button type='submit' variant="contained" disabled={!isValid || isSubmitting} color="success">
         Submit
-      </Button> */}
-
+      </Button>
     </form>
   );
 }
