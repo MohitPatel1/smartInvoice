@@ -2,41 +2,43 @@
 import React, { useEffect , useState } from 'react'
 // form
 // import { useForm ,useFieldArray, useFormContext , Controller, useWatch, FormProvider} from 'react-hook-form';
-import { useForm, FormProvider, useFormContext } from "react-hook-form";
+import { useForm, FormProvider, useFormContext, useFieldArray } from "react-hook-form";
 // pouchdb
 import getMasterDB from './database/getMasterDB';
+import { Button } from '@mui/material';
 
 export default function InvoiceForm() {
   // let methods = useForm();
   const form = useForm({
     defaultValues: {
-      customer: {
-        name: '',
-        number: '',
-      },
-      product: {
+      product: [{
         id: '',
         name: '',
         quantity: 0,
-        price: 0,
+        rate: 0,
         size: '',
         color:'',
+        subtotal: 0,
       },
-      subtotal: 0,
+    ]
     }
   });
 
   const { onChange } = useFormContext();
 
   const [ masterDB , setMasterDB ] = useState();
-  const [ reload , reloadPage ] = useState()
-  const { register, handleSubmit, formState, watch, reset , getValues } = form;
+  const [ reload , reloadPage ] = useState()  
+  const { register, handleSubmit, formState, watch, reset, control, setValue, getValues } = form;
   // const { onChange, onBlur, name, ref } = register('quantity'); 
-  const { errors,isSubmitSuccessful } = formState;
-  // const watchForm = watch();
-  // register('product.quantity')
+  const { errors, isSubmitSuccessful, isValid, isSubmitting } = formState;
   console.log('errors',errors)
-  
+
+
+  const { fields, append, remove } = useFieldArray({
+    name: 'product',
+    control
+  })
+
   useEffect(() => {
     if (isSubmitSuccessful) {
       reloadPage()
@@ -100,130 +102,136 @@ export default function InvoiceForm() {
     console.log({quantity});
   }
 
+
+  const changeAmount = (e, index) => {
+    const data = getValues()
+    const { product } = data;
+    const { quantity, rate } = product[index];
+    setValue(`product.${index}.amount`, (quantity * rate))
+    const total = data.product.reduce((total , current) => {
+      return total += current.amount
+    },0)
+    setValue('total',total)
+  }
+
+  const handleRemove = (index) => {
+    remove(index);
+    changeTotal()
+  }
+
   return (
-    <FormProvider {...form}>
-    <form onSubmit={handleSubmit(onSubmit)} noValidate>
-      <div className="form-control">
-        <label htmlFor="customerName">Customer Name:</label>
-        <input type="text" id='customerName' {...register('customer.name', {
-          required: {
-            value: true,
-            message: 'Customer name is required',
+    <form id='form' onSubmit={handleSubmit(onSubmit)} noValidate>
+      <div className='products-container'>
+        <h1>Products</h1>
+        <div>
+          {
+            fields.map((field, index) => {
+              return (
+                <div className='product' key={field.id}>
+                  <h3>Product {index + 1}</h3>
+
+                  <div className="form-control">
+                    <label id='imageUpload' htmlFor="imageUpload">Upload an image:</label>
+                    <input
+                      id="imageUpload"
+                      type="file"
+                      accept="image/*"
+                      {...register('image')}
+                    />
+                  </div>
+
+                  <div className="form-control">
+                    <label htmlFor="productId">Id:</label>
+                    <input type="text" id={`productId-${index}`} {...register(`product.${index}.id`, {
+                      required: {
+                        value: true,
+                        message: 'Product Id is required',
+                      }
+                    })} />
+                    <p className='error'>{errors.product && errors.product[index]?.id?.message}</p>
+                  </div>
+
+                  <div className="form-control">
+                    <label htmlFor="productName">Name:</label>
+                    <input type="text" id={`productName-${index}`} {...register(`product.${index}.name`, {
+                    })} />
+                  </div>
+
+                  <div className="form-control">
+                    <label htmlFor="productSize">Size:</label>
+                    <select id={`productSize-${index}`} {...register(`product.${index}.size`, {
+                    })}>
+                      <option value="">-- Select Size --</option>
+                      <option value="XS">XS</option>
+                      <option value="S">S</option>
+                      <option value="M">M</option>
+                      <option value="L">L</option>
+                      <option value="XL">XL</option>
+                    </select>
+                  </div>
+
+                  <div className="form-control">
+                    <label htmlFor="productColor">Color:</label>
+                    <input type="text" id={`productColor-${index}`} {...register(`product.${index}.color`, {
+                    })} />
+                  </div>
+
+                  <div className="form-control">
+                    <label htmlFor="productQuantity">Quantity:</label>
+                    <input type="number" name={`productQuantity-${index}`} id={`productQuantity-${index}`} {...register(`product.${index}.quantity`, {
+                      valueAsNumber: true,
+                      onChange: (e) => changeAmount(e, index),
+                    })} />
+                  </div>
+
+                  <div className="form-control">
+                    <label htmlFor="productRate">Rate:</label>
+                    <input type="number" name={`productRate-${index}`} id={`productRate-${index}`} {...register(`product.${index}.rate`, {
+                      valueAsNumber: true,
+                      onChange: (e) => changeAmount(e, index),
+                    })} />
+                  </div>
+
+                  <div className="form-control">
+                    <label htmlFor="productAmount">Amount:</label>
+                    <input type="number" name={`productAmount-${index}`} id={`productAmount-${index}`} {...register(`product.${index}.amount`, {
+                      valueAsNumber: true,
+                    })} />
+                  </div>
+                  <br />
+                  {index > 0 && <Button variant="contained" onClick={()=>handleRemove(index)} color="secondary">
+                    Remove
+                  </Button>}
+                </div>
+              )
+            })
           }
-        })} />
-        <p className='error'>{errors.customer?.name?.message}</p>
+          <Button variant="contained" onClick={() => append({
+            id: '',
+            name: '',
+            quantity: 0,
+            rate: 0,
+            size: '',
+            color: '',
+            amount: 0,
+          })}>Add product</Button>
+        </div>
       </div>
 
-      <div className="form-control">
-        <label htmlFor="customerNumber">Customer Number:</label>
-        <input type="text" id='customerNumber' {...register('customer.number', {
-          disabled: watch('customer.name') === "",
-          required: {
-            value: true,
-            message: 'Customer number is required',
-          }
-        })} />
-        <p className='error'>{errors?.customer?.number?.message}</p>
-      </div>
+     
+       
 
       <div className="form-control">
-        <label htmlFor="productId">Product Id:</label>
-        <input type="text" id='productId' {...register('product.id', {
-          required: {
-            value: true,
-            message: 'Product Id is required',
-          },
-        },
-        )} />
-        <p className='error'>{errors?.product?.id?.message}</p>
-      </div>
-
-      <div className="form-control">
-        <label htmlFor="productName">Product name:</label>
-        <input type="text" id='productName' {...register('product.name', {
-          disabled: watch('product.id') === "",
-          required: {
-            value: true,
-            message: 'Product name is required',
-          }
-        })} />
-        <p className='error'>{errors?.product?.name?.message}</p>
-      </div>
-
-      {/* Quantity */}
-      <div className="form-control">
-        <label htmlFor="productQuantity">Product quantity:</label>
-        <input 
-          type="number" 
-          id='productQuantity' 
-          name='productQuantity' 
-          {...register('product.quantity', {
-            disabled: watch('product.id') === "",
-            valueAsNumber: true,
-            onChange: () => handleQuantityChange(),
-          required: {
-            value: true,
-            message: 'Product quantity is required',
-          }
-        })} />
-        <p className='error'>{errors?.product?.quantity?.message}</p>
-      </div>
-
-      {/* Price */}
-      <div className="form-control">
-        <label htmlFor="productPrice">Product price:</label>
-        <input type="number" id='productPrice' name='productPrice' {...register('product.price', {
-          disabled: watch('product.id') === "",
-          valueAsNumber: true,
-          required: {
-            value: true,
-            message: 'Product price is required',
-          },
-          // onChange: {handleAmmountChange}
-        })} />
-        <p className='error'>{errors?.product?.price?.message}</p>
-      </div>
-
-      <div className="form-control">
-        <label htmlFor="productSize">Product size:</label>
-        <input type="text" id='productSize' {...register('product.size', {
-          disabled: watch('product.id') === "",
-          required: {
-            value: true,
-            message: 'Product size is required',
-          }
-        })} />
-        <p className='error'>{errors?.product?.size?.message}</p>
-      </div>
-      
-      <div className="form-control">
-        <label htmlFor="productColor">Product color:</label>
-        <input type="text" id='productColor' {...register('product.color', {
-          disabled: watch('product.id') === "",
-          required: {
-            value: true,
-            message: 'Product color is required',
-          }
-        })} />
-        <p className='error'>{errors?.product?.color?.message}</p>
-      </div>
-
-      <div className="form-control">
-        <label htmlFor="subtotal">Subtotal:</label>
-        <input type="number" id='subtotal' {...register('subtotal', {
+        <label htmlFor="total">Total:</label>
+        <input type="number" id='total' {...register('total', {
           valueAsNumber: true,
           disabled: true,
         })} />
-        <p className='error'>{errors?.subtotal?.message}</p>
       </div>
-
-      <button>Submit</button>
-      <button type='button' onClick={() => reset()}>Reset</button>
-      
-      {/* <Button type='submit' variant='contained' color='primary' >
+      <br />
+      <Button type='submit' variant="contained" disabled={!isValid || isSubmitting} color="success">
         Submit
-      </Button> */}
-      </form>
-    </FormProvider>
+      </Button>
+    </form>
   );
 }
