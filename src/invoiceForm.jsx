@@ -1,5 +1,5 @@
 import React, { useEffect , useState } from 'react'
-import { useForm ,useFieldArray} from 'react-hook-form';
+import { useForm ,useFieldArray, useFormContext} from 'react-hook-form';
 import getMasterDB from './database/getMasterDB';
 // import { Button } from '@mui/material'
 
@@ -25,10 +25,13 @@ export default function InvoiceForm() {
 
   const [ masterDB , setMasterDB ] = useState();
   const [ reload , reloadPage ] = useState()
-  
+  const { control, getValues, setValue, onChange } = useFormContext();
   const { register, handleSubmit, formState, watch, reset } = form;
+  // const { onChange, onBlur, name, ref } = register('quantity'); 
   const { errors,isSubmitSuccessful } = formState;
   // const watchForm = watch();
+  // register('product.quantity')
+  console.log('errors',errors)
   
   useEffect(() => {
     if (isSubmitSuccessful) {
@@ -62,6 +65,7 @@ export default function InvoiceForm() {
         })
         // if database have one invoice in it, get all docs
         await masterDB.get('invoice').then((doc) => {
+          console.log(doc)
           let invoiceArray = doc.dataArray;
           console.log({invoiceArray});        
         })
@@ -86,9 +90,16 @@ export default function InvoiceForm() {
     })
   }
 
+  // onChange functions of forms
+  const handleQuantityChange = () => {
+    const quantity = getValues('productQuantity');
+    console.log({quantity});
+  }
+
   return (
+    <FormProvider>
     <form onSubmit={handleSubmit(onSubmit)} noValidate>
-      <div className="form-control">
+      {/* <div className="form-control"> */}
         <label htmlFor="customerName">Customer Name:</label>
         <input type="text" id='customerName' {...register('customer.name', {
           required: {
@@ -96,10 +107,10 @@ export default function InvoiceForm() {
             message: 'Customer name is required',
           }
         })} />
-        <p className='error'>{errors.customer?.name?.message}</p>
-      </div>
+        {/* <p className='error'>{errors.customer?.name?.message}</p> */}
+      {/* </div> */}
 
-      <div className="form-control">
+      {/* <div className="form-control"> */}
         <label htmlFor="customerNumber">Customer Number:</label>
         <input type="text" id='customerNumber' {...register('customer.number', {
           disabled: watch('customer.name') === "",
@@ -108,21 +119,23 @@ export default function InvoiceForm() {
             message: 'Customer number is required',
           }
         })} />
-        <p className='error'>{errors.customer?.number?.message}</p>
-      </div>
+        {/* <p className='error'>{errors?.customer?.number?.message}</p> */}
+      {/* </div> */}
 
-      <div className="form-control">
+      {/* <div className="form-control"> */}
         <label htmlFor="productId">Product Id:</label>
         <input type="text" id='productId' {...register('product.id', {
           required: {
             value: true,
             message: 'Product Id is required',
-          }
-        })} />
-        <p className='error'>{errors.product?.id?.message}</p>
-      </div>
+          },
+        },
+        )} />
+        onChange={() => console.log('e')}
+        {/* <p className='error'>{errors?.product?.id?.message}</p> */}
+      {/* </div> */}
 
-      <div className="form-control">
+      {/* <div className="form-control"> */}
         <label htmlFor="productName">Product name:</label>
         <input type="text" id='productName' {...register('product.name', {
           disabled: watch('product.id') === "",
@@ -131,12 +144,18 @@ export default function InvoiceForm() {
             message: 'Product name is required',
           }
         })} />
-        <p className='error'>{errors.product?.name?.message}</p>
-      </div>
+        {/* <p className='error'>{errors?.product?.name?.message}</p> */}
+      {/* </div> */}
 
-      <div className="form-control">
+      {/* Quantity */}
+      {/* <div className="form-control"> */}
         <label htmlFor="productQuantity">Product quantity:</label>
-        <input type="number" id='productQuantity' {...register('product.quantity', {
+        <input 
+          type="number" 
+          id='productQuantity' 
+          name='productQuantity' 
+          onChange= {(e) => console.log(e)}
+          {...register('product.quantity', {
           disabled: watch('product.id') === "",
           valueAsNumber: true,
           required: {
@@ -144,23 +163,25 @@ export default function InvoiceForm() {
             message: 'Product quantity is required',
           }
         })} />
-        <p className='error'>{errors.product?.quantity?.message}</p>
-      </div>
+        {/* <p className='error'>{errors?.product?.quantity?.message}</p> */}
+      {/* </div> */}
 
-      <div className="form-control">
+      {/* Price */}
+      {/* <div className="form-control"> */}
         <label htmlFor="productPrice">Product price:</label>
-        <input type="number" id='productPrice' {...register('product.price', {
+        <input type="number" id='productPrice' name='productPrice' {...register('product.price', {
           disabled: watch('product.id') === "",
           valueAsNumber: true,
           required: {
             value: true,
             message: 'Product price is required',
-          }
+          },
+          // onChange: {handleAmmountChange}
         })} />
-        <p className='error'>{errors.product?.price?.message}</p>
-      </div>
+        {/* <p className='error'>{errors?.product?.price?.message}</p> */}
+      {/* </div> */}
 
-      <div className="form-control">
+      {/* <div className="form-control"> */}
         <label htmlFor="productSize">Product size:</label>
         <input type="text" id='productSize' {...register('product.size', {
           disabled: watch('product.id') === "",
@@ -169,10 +190,10 @@ export default function InvoiceForm() {
             message: 'Product size is required',
           }
         })} />
-        <p className='error'>{errors.product?.size?.message}</p>
-      </div>
+        {/* <p className='error'>{errors?.product?.size?.message}</p> */}
+      {/* </div> */}
       
-      <div className="form-control">
+      {/* <div className="form-control"> */}
         <label htmlFor="productColor">Product color:</label>
         <input type="text" id='productColor' {...register('product.color', {
           disabled: watch('product.id') === "",
@@ -181,8 +202,8 @@ export default function InvoiceForm() {
             message: 'Product color is required',
           }
         })} />
-        <p className='error'>{errors.product?.color?.message}</p>
-      </div>
+        {/* <p className='error'>{errors?.product?.color?.message}</p> */}
+      {/* </div> */}
 
       <div className="form-control">
         <label htmlFor="subtotal">Subtotal:</label>
@@ -190,7 +211,7 @@ export default function InvoiceForm() {
           valueAsNumber: true,
           disabled: true,
         })} />
-        <p className='error'>{errors.subtotal?.message}</p>
+        {/* <p className='error'>{errors?.subtotal?.message}</p> */}
       </div>
 
       <button>Submit</button>
@@ -199,7 +220,7 @@ export default function InvoiceForm() {
       {/* <Button type='submit' variant='contained' color='primary' >
         Submit
       </Button> */}
-
-    </form>
+      </form>
+    </FormProvider>
   );
 }
