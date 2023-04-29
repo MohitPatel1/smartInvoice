@@ -10,7 +10,7 @@
 }
 
 .read-the-docs {
-  color: #888;
+  color: #888888;
 }
 
 label {
@@ -28,9 +28,9 @@ input[type="data"] {
   padding: 6px 12px;
   font-size: 14px;
   line-height: 1.42857143;
-  color: #161313;
+  color: #000000;
   background-image: none;
-  border: 1px solid #ccc;
+  border: 1px solid #000000; /* black*/
   border-radius: 4px;
 }
 
@@ -45,7 +45,7 @@ input[type="data"] {
 }
 
 .product {
-  border: 1px solid aliceblue;
+  border: 1px solid rgb(0, 0, 0);
   border-radius: 10px;
   padding: 10px;
   margin-bottom: 15px;
@@ -80,4 +80,26 @@ input[type="data"] {
 #imageUpload{
   font-size: small;
   margin-bottom: 10px;
+}
+.addbuyer-button,.search{
+
+  display: inline-block;
+
+}
+
+.search{
+
+  margin: 0 10px;
+  /* margin-top: px; */
+ /* height: 54.733px;*/
+}
+
+#buyer-select{
+  display: flex;
+}
+
+.submit-buttons{
+    display: inline-block;
+    margin: 10px;
+    color: #ededed;
 }
