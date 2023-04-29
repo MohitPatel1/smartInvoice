@@ -1,5 +1,5 @@
 // react
-import React, { useEffect , useState } from 'react'
+import React, { useEffect, useState } from 'react'
 // form
 // import { useForm ,useFieldArray, useFormContext , Controller, useWatch, FormProvider} from 'react-hook-form';
 import { useForm, FormProvider, useFormContext, useFieldArray } from "react-hook-form";
@@ -13,26 +13,28 @@ export default function InvoiceForm() {
   const form = useForm({
     defaultValues: {
       product: [{
+        image: null,
         id: '',
         name: '',
         quantity: 0,
         rate: 0,
         size: '',
-        color:'',
-        subtotal: 0,
-      },
-    ]
+        color: '',
+        amount: 0,
+      }
+      ],
+      total: 0,
     }
   });
 
   const { onChange } = useFormContext();
 
-  const [ masterDB , setMasterDB ] = useState();
-  const [ reload , reloadPage ] = useState()  
+  const [masterDB, setMasterDB] = useState();
+  const [reload, reloadPage] = useState()
   const { register, handleSubmit, formState, watch, reset, control, setValue, getValues } = form;
   // const { onChange, onBlur, name, ref } = register('quantity'); 
   const { errors, isSubmitSuccessful, isValid, isSubmitting } = formState;
-  console.log('errors',errors)
+  console.log('errors', errors)
 
 
   const { fields, append, remove } = useFieldArray({
@@ -46,8 +48,8 @@ export default function InvoiceForm() {
       reset()
     }
   }, [isSubmitSuccessful, reset])
-  
-  useEffect( () => {
+
+  useEffect(() => {
     const getData = async () => {
       // if master database is not created, create one and store it in masterDB
       if (!masterDB) {
@@ -58,81 +60,90 @@ export default function InvoiceForm() {
       // if database exists
       if (masterDB) {
         await masterDB.allDocs().then(async (doc) => {
-          console.log({doc});
+          console.log({ doc });
           // if database is empty, set data to empty array in invoice _id
-          if (doc.total_rows == 0){
+          if (doc.total_rows == 0) {
             await masterDB
-            .put({
-              _id: 'invoice',
-              dataArray: [],
-            }).then((data) => {
-              console.log({data});
-            });
+              .put({
+                _id: 'invoice',
+                dataArray: [],
+              }).then((data) => {
+                console.log({ data });
+              });
           };
         })
         // if database have one invoice in it, get all docs
         await masterDB.get('invoice').then((doc) => {
           console.log(doc)
           let invoiceArray = doc.dataArray;
-          console.log({invoiceArray});        
+          console.log({ invoiceArray });
         })
       }
     }
     getData();
-  }, [masterDB , reload])
+  }, [masterDB, reload])
 
   // when form is submitted, append data to pouchDB
   const onSubmit = async (values) => {
-    console.log({values});
-    console.log('%c', {values}, 'background: #222; color: #bada55');
+    console.log({ values });
+    console.log('%c', { values }, 'background: #222; color: #bada55');
     await masterDB.get('invoice').then(async (doc) => {
       // previous data 
-      console.log({doc})
+      console.log({ doc })
       let newDataArray = doc.dataArray;
       // appending new values to previous data array
       newDataArray.push(values)
-      console.log({newDataArray})
+      console.log({ newDataArray })
       // update masterDB
       await masterDB.put(doc)
     })
   }
 
-  // onChange functions of forms
-  const handleQuantityChange = () => {
-    const quantity = getValues('productQuantity');
-    console.log({quantity});
-  }
+  const [image, setImage] = useState(null);
 
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+
+    if (file && file.type.includes('image/')) {
+      setImage(file);
+    } else {
+      alert('Please select an image file.');
+    }
+  }
 
   const changeAmount = (e, index) => {
     const data = getValues()
     const { product } = data;
     const { quantity, rate } = product[index];
     setValue(`product.${index}.amount`, (quantity * rate))
-    const total = data.product.reduce((total , current) => {
+    const total = data.product.reduce((total, current) => {
       return total += current.amount
-    },0)
-    setValue('total',total)
+    }, 0)
+    setValue('total', total)
   }
 
   const handleRemove = (index) => {
+    const data = getValues()
+    const { product, total } = data;
+    const { amount } = product[index];
     remove(index);
-    changeTotal()
+    let temp = total - amount;
+    setValue('total', temp)
   }
 
   return (
     <form id='form' onSubmit={handleSubmit(onSubmit)} noValidate>
       <div id='buyer-select'>
-      <Autocomplete className='search'
-        id="grouped-demo"
-        options={[]}
-        groupBy={(option) => option.firstLetter}
-        getOptionLabel={(option) => option.title}
-        sx={{ width: 300 }}
-        renderInput={(params) => <TextField {...params} label="Existing Buyers" />}
+        <Autocomplete className='search'
+          id="grouped-demo"
+          options={[]}
+          groupBy={(option) => option.firstLetter}
+          getOptionLabel={(option) => option.title}
+          sx={{ width: 300 }}
+          renderInput={(params) => <TextField {...params} label="Existing Buyers" />}
 
-      />
-      <Button className='addbuyer-button'id='addbuyer-button' variant="outlined">Add Buyer</Button>
+        />
+        <Button className='addbuyer-button' id='addbuyer-button' variant="outlined">Add Buyer</Button>
       </div>
       <div className='products-container'>
         <h1>Products</h1>
@@ -144,14 +155,15 @@ export default function InvoiceForm() {
                   <h3>Product {index + 1}</h3>
 
                   <div className="form-control">
-                    <label id='imageUpload' htmlFor="imageUpload">Upload an image:</label>
+                    <label htmlFor="imageUpload">Upload an image:</label>
                     <input
                       id="imageUpload"
                       type="file"
                       accept="image/*"
-                      {...register('image')}
+                      onChange={handleFileChange}
                     />
                   </div>
+
 
                   <div className="form-control">
                     <label htmlFor="productId">Id:</label>
@@ -175,11 +187,11 @@ export default function InvoiceForm() {
                     <select id={`productSize-${index}`} {...register(`product.${index}.size`, {
                     })}>
                       <option value="">-- Select Size --</option>
-                      <option value="XS">XS</option>
-                      <option value="S">S</option>
-                      <option value="M">M</option>
-                      <option value="L">L</option>
-                      <option value="XL">XL</option>
+                      <option value="XS">28</option>
+                      <option value="S">30</option>
+                      <option value="M">32</option>
+                      <option value="L">34</option>
+                      <option value="XL">36</option>
                     </select>
                   </div>
 
@@ -212,7 +224,7 @@ export default function InvoiceForm() {
                     })} />
                   </div>
                   <br />
-                  {index > 0 && <Button variant="contained" onClick={()=>handleRemove(index)} color="secondary">
+                  {(index > 0 || fields.length > 1) && <Button variant="contained" onClick={() => handleRemove(index)} color="secondary">
                     Remove
                   </Button>}
                 </div>
@@ -231,8 +243,8 @@ export default function InvoiceForm() {
         </div>
       </div>
 
-     
-       
+
+
 
       <div className="form-control">
         <label htmlFor="total">Total:</label>
