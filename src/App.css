@@ -103,3 +103,14 @@ input[type="data"] {
   margin: 10px;
   color: #ededed;
 }
+
+.products-container h1{
+  margin: 20px;
+  margin-top: 0;
+}
+
+#date{
+  display: flex;
+  flex-direction: row-reverse;
+  margin-top: 10px;
+}

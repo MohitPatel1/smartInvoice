@@ -149,6 +149,9 @@ export default function InvoiceForm() {
           Add Buyer
         </Button>
       </div>
+      <div id='date'>
+        <input style={{direction:'flex-end'}} type="date" />
+      </div>
       <div className='products-container'>
         <h1>Products</h1>
         <div>
