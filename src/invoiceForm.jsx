@@ -22,7 +22,6 @@ export default function InvoiceForm() {
 
   const { register, handleSubmit, formState, watch, reset, control, setValue, getValues } = form;
   const { errors, isSubmitSuccessful, isValid, isSubmitting } = formState;
-  // const watchForm = watch();
 
   const { fields, append, remove } = useFieldArray({
     name: 'product',
@@ -42,35 +41,10 @@ export default function InvoiceForm() {
     const { product } = data;
     const { quantity, rate } = product[index];
     setValue(`product.${index}.amount`, quantity * rate)
-    console.log({data})
     const total = data.product.reduce((total , current) => {
       return total += current.amount
     },0)
-    console.log({total})
     setValue('total',total)
-    // changeTotal();
-
-  }
-
-  const changeTotal = () => {
-    const data = getValues()
-    const { product } = data;
-    console.log({product})
-    // let sum = product.reduce((accumulator, currentValue) => {
-    //   currentValue.amount = isNaN(currentValue.amount) ? 0 : currentValue.amount;
-    //   console.log(currentValue.amount)
-    //   console.log({accumulator})
-    //   return accumulator + currentValue.amount;
-    // }, 0);
-    // console.log(sum)
-    let sum=0;
-    for (let index = 0; index < product.length; index++) {
-      const element = product[index];
-      console.log(element.amount)
-      sum+=element.amount;
-    }
-    console.log(sum)
-    // setValue('total', sum)
   }
 
   const handleRemove = (index) => {
@@ -154,12 +128,10 @@ export default function InvoiceForm() {
                   <div className="form-control">
                     <label htmlFor="productAmount">Amount:</label>
                     <input type="number" name={`productAmount-${index}`} id={`productAmount-${index}`} {...register(`product.${index}.amount`, {
-                      // disabled: true,
                       valueAsNumber: true,
                     })} />
                   </div>
                   <br />
-                  {/* {index > 0 && <button type='button' onClick={() => remove(index)}>Remove</button>} */}
                   {index > 0 && <Button variant="contained" onClick={()=>handleRemove(index)} color="secondary">
                     Remove
                   </Button>}
