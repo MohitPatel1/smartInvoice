@@ -145,10 +145,13 @@ export default function InvoiceForm() {
           sx={{ width: 300 }}
           renderInput={(params) => <TextField {...params} label="Existing Buyers" />}
 
-      />
-      <Button className='addbuyer-button'id='addbuyer-button' variant="outlined" onClick={()=>navigate("/addBuyer")}>
-        Add Buyer
-      </Button>
+        />
+        <Button className='addbuyer-button' id='addbuyer-button' variant="outlined" onClick={() => navigate("/addBuyer")}>
+          Add Buyer
+        </Button>
+      </div>
+      <div id='date'>
+        <input style={{direction:'flex-end'}} type="date" />
       </div>
       <div className='products-container'>
         <h1>Products</h1>
@@ -160,7 +163,7 @@ export default function InvoiceForm() {
                   <h3>Product {index + 1}</h3>
 
                   <div className="form-control">
-                    <label htmlFor="imageUpload">Upload an image:</label>
+                    <label id="imageUpload" htmlFor="imageUpload">Upload an image:</label>
                     <input
                       id="imageUpload"
                       type="file"
@@ -272,7 +275,6 @@ export default function InvoiceForm() {
         <label htmlFor="total">Total:</label>
         <input type="number" id='total' {...register('total', {
           valueAsNumber: true,
-          disabled: true,
         })} />
       </div>
       <br />
