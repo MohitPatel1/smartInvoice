@@ -10,7 +10,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   //   <App />
   // </React.StrictMode>,
   <>
-  {/* <AddBuyer /> */}
-  <App />
+  <AddBuyer />
+  {/* <App /> */}
   </>  
 )

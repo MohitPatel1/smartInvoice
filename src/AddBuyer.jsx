@@ -10,6 +10,7 @@ export default function AddBuyer() {
       gstNo: '',
       number: '',
       email: '',
+      address: '',
     }, mode: 'all'
   })
 
@@ -67,6 +68,15 @@ export default function AddBuyer() {
         })} />
         <p className='error'>{errors.email?.message}</p>
       </div>
+
+      <div className="form-control">
+        <div style={{display:'flex'}}>
+          <label htmlFor="address">Address:</label>
+          <textarea name="address" id="address" cols="30" rows="2" {...register('address', {
+          })}></textarea>
+        </div>
+      </div>
+
       <br />
       <Button type='submit' variant="contained" disabled={!isValid || isSubmitting} color="success">
         Submit
