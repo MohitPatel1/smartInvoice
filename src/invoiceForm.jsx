@@ -45,12 +45,12 @@ export default function InvoiceForm() {
 
   const onSubmit = data => console.log(data);
 
-  const changeAmount = () => {
-    const productQuantity = getValues(`productQuantity-0`)
-    const productRate = getValues(`productRate-0`)
-    console.log('hello')
-    console.log(productQuantity)
-    console.log(productRate)
+  const changeAmount = (e,index) => {
+    const data = getValues()
+    const {product}=data;
+    const {quantity,rate}=product[index]
+    setValue(`product.${index}.amount`,quantity*rate)
+    // console.log({quantity,rate})
   }
 
   return (
@@ -177,6 +177,7 @@ export default function InvoiceForm() {
                     <input type="number" name={`productQuantity-${index}`} id={`productQuantity-${index}`} {...register(`product.${index}.quantity`, {
                       disabled: watch(`product.${index}.id`) === "",
                       valueAsNumber: true,
+                      onChange:(e)=>changeAmount(e,index),
                       required: {
                         value: true,
                         message: 'Product quantity is required',
@@ -190,6 +191,7 @@ export default function InvoiceForm() {
                     <input type="number" name={`productRate-${index}`} id={`productRate-${index}`} onBlur={() => changeAmount()} {...register(`product.${index}.rate`, {
                       disabled: watch(`product.${index}.id`) === "",
                       valueAsNumber: true,
+                      onChange:(e)=>changeAmount(e,index),
                       required: {
                         value: true,
                         message: 'Product rate is required',
@@ -201,7 +203,6 @@ export default function InvoiceForm() {
                   <div className="form-control">
                     <label htmlFor="productAmount">Amount:</label>
                     <input type="number" name={`productAmount-${index}`} id={`productAmount-${index}`} {...register(`product.${index}.amount`, {
-                      value: watch(`product.${index}.quantity`) * watch(`product.${index}.rate`),
                       disabled: true,
                       valueAsNumber: true,
                     })} />
@@ -215,10 +216,11 @@ export default function InvoiceForm() {
           <button type='button' onClick={() => append({
             id: '',
             name: '',
-            quantity: 0,
+            quantity: 1,
             rate: 0,
             size: '',
             color: '',
+            amount: 0,
           })}>Add product</button>
         </div>
       </div>
