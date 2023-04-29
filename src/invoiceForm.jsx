@@ -9,7 +9,7 @@ export default function InvoiceForm() {
       product: [{
         id: '',
         name: '',
-        quantity: 1,
+        quantity: 0,
         rate: 0,
         size: '',
         color: '',
@@ -40,9 +40,35 @@ export default function InvoiceForm() {
   const changeAmount = (e, index) => {
     const data = getValues()
     const { product } = data;
-    const { quantity, rate } = product[index]
+    const { quantity, rate } = product[index];
     setValue(`product.${index}.amount`, quantity * rate)
-    // console.log({quantity,rate})
+    changeTotal();
+  }
+
+  const changeTotal = () => {
+    const data = getValues()
+    const { product } = data;
+    console.log({product})
+    // let sum = product.reduce((accumulator, currentValue) => {
+    //   currentValue.amount = isNaN(currentValue.amount) ? 0 : currentValue.amount;
+    //   console.log(currentValue.amount)
+    //   console.log({accumulator})
+    //   return accumulator + currentValue.amount;
+    // }, 0);
+    // console.log(sum)
+    let sum=0;
+    for (let index = 0; index < product.length; index++) {
+      const element = product[index];
+      console.log(element.amount)
+      sum+=element.amount;
+    }
+    console.log(sum)
+    // setValue('total', sum)
+  }
+
+  const handleRemove = (index) => {
+    remove(index);
+    changeTotal()
   }
 
   return (
@@ -112,7 +138,7 @@ export default function InvoiceForm() {
 
                   <div className="form-control">
                     <label htmlFor="productRate">Rate:</label>
-                    <input type="number" name={`productRate-${index}`} id={`productRate-${index}`} onBlur={() => changeAmount()} {...register(`product.${index}.rate`, {
+                    <input type="number" name={`productRate-${index}`} id={`productRate-${index}`} {...register(`product.${index}.rate`, {
                       valueAsNumber: true,
                       onChange: (e) => changeAmount(e, index),
                     })} />
@@ -127,7 +153,7 @@ export default function InvoiceForm() {
                   </div>
                   <br />
                   {/* {index > 0 && <button type='button' onClick={() => remove(index)}>Remove</button>} */}
-                  {index > 0 && <Button variant="contained" onClick={() => remove(index)} color="secondary">
+                  {index > 0 && <Button variant="contained" onClick={()=>handleRemove(index)} color="secondary">
                     Remove
                   </Button>}
                 </div>
@@ -137,7 +163,7 @@ export default function InvoiceForm() {
           <Button variant="contained" onClick={() => append({
             id: '',
             name: '',
-            quantity: 1,
+            quantity: 0,
             rate: 0,
             size: '',
             color: '',

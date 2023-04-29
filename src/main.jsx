@@ -5,8 +5,12 @@ import './index.css'
 import AddBuyer from './AddBuyer.jsx'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-    {/* <AddBuyer /> */}
-    <App />
-  </React.StrictMode>,
+  // <React.StrictMode>
+  //   {/* <AddBuyer /> */}
+  //   <App />
+  // </React.StrictMode>,
+  <>
+  {/* <AddBuyer /> */}
+  <App />
+  </>  
 )
