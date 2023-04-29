@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Document, Page, Text, PDFDownloadLink } from '@react-pdf/renderer';
+import { Document,Image, Page, Text, PDFDownloadLink } from '@react-pdf/renderer';
+import { View } from '@react-pdf/renderer';
 
 function Trial() {
   // Define the static data
@@ -15,13 +16,34 @@ function Trial() {
   const handleClick = () => {
     setGeneratePDF(true);
   };
-
-  // Define a function to render the PDF document
+  const pdfStyles = {
+    page: {
+      border: 1, // border width
+      borderColor: 'black', // border color
+      borderStyle: 'solid', // border style
+      padding: 100, // padding for the content inside the border
+      margin:'10px'
+    },
+    body: {
+      paddingTop: 35,
+      paddingBottom: 65,
+      paddingHorizontal: 35,
+    },
+    header: {
+      fontSize: 12,
+      marginBottom: 20,
+      textAlign: 'center',
+      color: 'grey',
+    },
+  };
   const PDFDocument = () => (
     <Document>
-      <Page>
-        <Text>{data.title}</Text>
-        <Text>{data.content}</Text>
+      <Page size="A4">
+        <View style={{margin:10,border:2,height:830,width:575}}>
+          <View>
+            <img src="C:\Users\Kush\Documents\Python\twitter1.png"/>
+          </View>
+        </View>
       </Page>
     </Document>
   );
