@@ -9,7 +9,7 @@ import {
   } from "@react-pdf/renderer";
   import { pdfComponents, pdfStyles } from "../../components/pdf-formats";
   import { appLevelDefaults } from "../../appLevelDefaults";
-  import { ogDefaultsCache, ogDataCache, userObjCache } from "../../utils/localCacheAPI";
+  // import { ogDefaultsCache, ogDataCache, userObjCache } from "../../utils/localCacheAPI";
   import { Difference_In_Days, fDate } from "../../utils/formatTime";
   import { Fragment } from 'react';
   import { DrCrFormat, fIndianFormat, formatGstStateCode, inWords } from "../../utils/formatNumber";
@@ -135,10 +135,7 @@ import {
                 <View  key={prodIndex} wrap style={{ flexDirection: "row", fontSize: 10, textAlign: "center",borderTopWidth: (prodIndex > 0) && invObj.products[prodIndex-1]?.variationsBreakdown && invObj.products[prodIndex-1]?.variationsBreakdown[0].name ?1:0}}>
                     <Text style={{ width: "6%", padding: 1 }}>{prodIndex + 1}</Text>
                     <View style={{ width: "10%", ...pdfStyles.tableCell, alignItems: "center", justifyContent: "center" }}>
-                        {Boolean(product.imageFieldName)&& Boolean(invObj?._attachments)&& Boolean(invObj?._attachments[product?.imageFieldName]) &&
-                            // @ts-ignore
                             <Image source={invObj?._attachments[product?.imageFieldName]?.data?.preview} style={{ width: "95%" }} />
-                        }
                     </View>
                     <Text style={{ width: "15%", ...pdfStyles.tableCell ,textTransform: 'uppercase'}}>{product.name}</Text>
                     <Text style={{ width: "27%", ...pdfStyles.tableCell ,textTransform: 'uppercase'}}>{product.description}</Text>
