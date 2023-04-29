@@ -4,6 +4,7 @@ import viteLogo from '/vite.svg'
 import './App.css'
 import getMasterDB from './database/getMasterDB'
 import InvoiceForm from './invoiceForm'
+import { FormProvider } from 'react-hook-form'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -20,24 +21,9 @@ function App() {
 
   return (
     <>
-      {/* <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={handleCountOnClick}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div> */}
-      <InvoiceForm/>
+      <FormProvider>
+        <InvoiceForm/>
+      </FormProvider>
     </>
   )
 }
