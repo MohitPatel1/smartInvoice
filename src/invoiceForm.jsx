@@ -1,5 +1,5 @@
-import { Button } from '@mui/material';
-import React, { useEffect, useState } from 'react'
+import { Autocomplete, Button, TextField } from '@mui/material';
+import React, { useEffect } from 'react'
 import { useForm, useFieldArray } from 'react-hook-form';
 
 export default function InvoiceForm() {
@@ -54,6 +54,18 @@ export default function InvoiceForm() {
 
   return (
     <form id='form' onSubmit={handleSubmit(onSubmit)} noValidate>
+      <div id='buyer-select'>
+      <Autocomplete className='search'
+        id="grouped-demo"
+        options={[]}
+        groupBy={(option) => option.firstLetter}
+        getOptionLabel={(option) => option.title}
+        sx={{ width: 300 }}
+        renderInput={(params) => <TextField {...params} label="Existing Buyers" />}
+
+      />
+      <Button className='addbuyer-button'id='addbuyer-button' variant="outlined">Add Buyer</Button>
+      </div>
       <div className='products-container'>
         <h1>Products</h1>
         <div>
