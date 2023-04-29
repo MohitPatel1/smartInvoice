@@ -45,31 +45,31 @@ function Trial() {
             <Text style={{margin:10,marginTop:20}}>GST No :</Text>
             </View>
             <View style={{marginLeft:400}}>
-              <Text style={{marginTop:-85}}>Name:</Text>
-              <Text>Address:</Text>
-              <Text>Ph-no:</Text>
+              <Text style={{marginTop:-85,}}>Name:</Text>
+              <Text style={{}}>Address:</Text>
+              <Text style={{}}>Ph-no:</Text>
             </View>
             <View style={{border:1,marginTop:600}}>
             </View>
             <View style={{marginTop:-600,marginLeft:400}}>
-              <Text style={{marginTop:10}}>Invoice No:</Text>
-              <Text style={{marginTop:30}}>Invoice Date:</Text>
+              <Text style={{marginTop:10,}}>Invoice No:</Text>
+              <Text style={{marginTop:30,}}>Invoice Date:</Text>
             </View>
           </View>
           <View style={{border:1,width:573,marginTop:100,height:0}}>
-            <Text style={{marginLeft:10}}>Sr.No: </Text>
+            <Text style={{marginLeft:10,}}>Sr.No: </Text>
           </View>
           <View style={{marginLeft:100}}>
           <Text style={{marginLeft:10}}>Image</Text>
           </View>
           <View style={{marginLeft:220,marginTop:-18}}> 
-          <Text>Qt</Text>
+          <Text style={{}}>Qt</Text>
           </View>
           <View style={{marginLeft:330, marginTop:-20}}>
-          <Text>Price</Text>
+          <Text style={{}}>Price</Text>
           </View>
           <View style={{marginLeft:450,marginTop:-21}}>
-          <Text>Amount</Text>
+          <Text style={{}}>Amount</Text>
           </View>
           <View style={{marginTop:400}}></View>
         </View>
