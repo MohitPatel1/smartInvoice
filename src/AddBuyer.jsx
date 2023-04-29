@@ -1,6 +1,7 @@
 import { Button } from '@mui/material';
 import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
+import { useNavigate } from "react-router-dom";
 
 export default function AddBuyer() {
   const form = useForm({
@@ -16,6 +17,7 @@ export default function AddBuyer() {
 
   const { register, formState, reset, handleSubmit, getValues } = form;
   const { errors, isSubmitSuccessful } = formState;
+  const navigate = useNavigate();
 
   const onSubmit = () => {
     const data = getValues()
@@ -70,16 +72,16 @@ export default function AddBuyer() {
       </div>
 
       <div className="form-control">
-        <div style={{display:'flex'}}>
+        <div style={{ display: 'flex' }}>
           <label htmlFor="address">Address:</label>
-          <textarea style={{marginLeft:'10px'}} name="address" id="address" cols="30" rows="2" {...register('address', {
+          <textarea style={{ marginLeft: '10px' }} name="address" id="address" cols="30" rows="2" {...register('address', {
           })}></textarea>
         </div>
       </div>
 
       <br />
-      <Button type='submit' variant="contained" color="success">
-        Submit
+      <Button type='submit' variant="contained" color="success" onClick={() => navigate("/")}>
+        Add
       </Button>
 
     </form>
