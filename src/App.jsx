@@ -1,3 +1,4 @@
+import { PDFDownloadLink } from "@react-pdf/renderer";
 import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
@@ -6,6 +7,7 @@ import getMasterDB from './database/getMasterDB'
 
 import InvoiceForm from './invoiceForm'
 import { FormProvider } from 'react-hook-form'
+import InvoicePdf from "./InviocePdf";
 
 
 function App() {
@@ -24,9 +26,15 @@ function App() {
 
   return (
     <>
-      <FormProvider>
+    <div className = "App">
+    <PDFDownloadLink Document={<InvoicePdf />} filename = "Invoice"> 
+    <button>Download</button>
+    </PDFDownloadLink>
+    <InvoicePdf />
+  </div>
+      {/* <FormProvider>
         <InvoiceForm/>
-      </FormProvider>
+      </FormProvider> */}
     </>
   )
 }
