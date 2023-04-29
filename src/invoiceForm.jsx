@@ -98,10 +98,11 @@ export default function InvoiceForm() {
       console.log({ newDataArray })
       // update masterDB
       await masterDB.put(doc)
-    })
+    });
+    setImage('')
   }
 
-  const [image, setImage] = useState(null);
+  const [image, setImage] = useState();
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -166,9 +167,26 @@ export default function InvoiceForm() {
                     <input
                       id="imageUpload"
                       type="file"
-                      accept="image/*"
-                      onChange={handleFileChange}
+                      accept="image/*"                      
+                      onChange={(e) => {
+                        const fileReader = new FileReader();
+                        fileReader.onload = () => {
+                          if (fileReader.readyState === 2) {
+                            setImage(fileReader.result);
+                          }
+                        };
+                        fileReader.readAsDataURL(e.target.files[0]);
+                      }}
                     />
+                    {image ? (
+                    <img                     
+                      src={image}
+                      alt="image"
+                      width={'50px'}
+                    />
+                  ) : (
+                    ""
+                  )}
                   </div>
 
 
