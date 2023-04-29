@@ -4,7 +4,7 @@ import { Document, Page, Text, PDFDownloadLink } from '@react-pdf/renderer';
 function Trial() {
   // Define the static data
   const data = {
-    title: 'My Document',
+    title: 'Invoice',
     content: 'This is some static data that will be included in the PDF document.'
   };
 
@@ -25,7 +25,6 @@ function Trial() {
       </Page>
     </Document>
   );
-
   return (
     <div>
       <button onClick={handleClick}>Generate PDF</button>
