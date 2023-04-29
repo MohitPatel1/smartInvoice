@@ -30,7 +30,8 @@ input[type="data"] {
   line-height: 1.42857143;
   color: #000000;
   background-image: none;
-  border: 1px solid #000000; /* black*/
+  border: 1px solid #000000;
+  /* black*/
   border-radius: 4px;
 }
 
@@ -77,29 +78,28 @@ input[type="data"] {
   width: 100%;
 }
 
-#imageUpload{
+#imageUpload {
   font-size: small;
   margin-bottom: 10px;
 }
-.addbuyer-button,.search{
+
+.addbuyer-button,
+.search {
 
   display: inline-block;
 
 }
 
-.search{
-
+.search {
   margin: 0 10px;
-  /* margin-top: px; */
- /* height: 54.733px;*/
 }
 
-#buyer-select{
+#buyer-select {
   display: flex;
 }
 
-.submit-buttons{
-    display: inline-block;
-    margin: 10px;
-    color: #ededed;
+.submit-buttons {
+  display: inline-block;
+  margin: 10px;
+  color: #ededed;
 }
