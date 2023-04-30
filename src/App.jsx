@@ -4,40 +4,21 @@ import viteLogo from '/vite.svg'
 import './App.css'
 import getMasterDB from './database/getMasterDB'
 import InvoiceForm from './invoiceForm'
+import { FormProvider } from 'react-hook-form'
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import AddBuyer from './AddBuyer'
 
 function App() {
-  const [count, setCount] = useState(0)
-  const handleCountOnClick = async (e) => {
-    console.log(getMasterDB())
-    const oldCount = await getMasterDB().get('clickCount')
-    console.log(oldCount)
-    getMasterDB().put({
-      ...oldCount,
-      _id: 'clickCount', 
-      count: (oldCount?.count || 0) + 1
-    })
-  }
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={handleCountOnClick}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <InvoiceForm/>
+      <Router>
+        <Routes>
+          <Route exact path="/" element={<FormProvider><InvoiceForm/></FormProvider>} />
+          <Route exact path="/addBuyer" element={<AddBuyer />} />          
+        </Routes>
+        {/* <ToastContainer /> */}
+      </Router>
     </>
   )
 }
