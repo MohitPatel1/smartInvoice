@@ -1,7 +1,9 @@
 import { Button } from '@mui/material';
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from "react-router-dom";
+// pouchdb
+import getMasterDB from './database/getMasterDB';
 
 export default function AddBuyer() {
   const form = useForm({
@@ -16,13 +18,60 @@ export default function AddBuyer() {
   })
 
   const { register, formState, reset, handleSubmit, getValues } = form;
+  const [ masterDB , setMasterDB ] = useState();
+  const [ reload , setReload ] = useState();
   const { errors, isSubmitSuccessful } = formState;
   const navigate = useNavigate();
 
-  const onSubmit = () => {
+  useEffect(() => {
+
+    const getBuyerList = async () => {
+    // if masterDB does not exist 
+    if(!masterDB){
+      let tempDb = await getMasterDB();
+      console.log({tempDb});
+      setMasterDB(tempDb)
+    }
+    // if masterDB exists
+    if(masterDB){
+      await masterDB.allDocs().then(async (doc) => {
+        console.log({doc})
+        if (doc.total_rows == 0) {
+          await masterDB.put({
+              _id: 'invoice',
+              dataArray: [],
+            });
+          await masterDB.put({
+            _id: 'buyers',
+            buyerList: [],
+          });
+        };
+      });
+        await masterDB.allDocs().then((allDocs) => {
+          console.log({allDocs})
+        });
+        await masterDB.get('buyers').then((doc) => {
+          console.log(doc)
+          let buyerList = doc.buyerList;
+          console.log({ buyerList });
+        });
+    }
+  };
+  getBuyerList();
+  }, [masterDB , reload ])
+
+  const onSubmit = async (values) => {
     const data = getValues()
     console.log(data)
-  }
+    await masterDB.get('buyers').then(async (doc) => {
+      console.log({doc})
+      let newBuyerList = doc.buyerList;
+      newBuyerList.push(values)
+      doc.buyerList = newBuyerList;
+      await masterDB.put(doc)
+    })
+  };
+  
   useEffect(() => {
     if (isSubmitSuccessful) {
       reset()
@@ -56,7 +105,7 @@ export default function AddBuyer() {
 
       <div className="form-control">
         <label htmlFor="number">Phone number:</label>
-        <input type="text" id='number' {...register('number', {
+        <input type="text" id='number' {...register('phNumber', {
         })} />
       </div>
 

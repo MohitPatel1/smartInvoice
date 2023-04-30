@@ -50,7 +50,7 @@ export default function InvoiceForm() {
       reloadPage()
       reset()
     }
-  }, [isSubmitSuccessful, reset])
+  }, [isSubmitSuccessful, reload])
 
   useEffect(() => {
     const getData = async () => {
@@ -66,14 +66,18 @@ export default function InvoiceForm() {
           console.log({ doc });
           // if database is empty, set data to empty array in invoice _id
           if (doc.total_rows == 0) {
-            await masterDB
-              .put({
+            await masterDB.put({
                 _id: 'invoice',
-                dataArray: [],
-              }).then((data) => {
-                console.log({ data });
+                dataArray: []
               });
+            await masterDB.put({
+              _id: 'buyers',
+              buyerList: []
+            });
           };
+        });
+        await masterDB.allDocs().then((allDocs) => {
+          console.log({allDocs})
         })
         // if database have one invoice in it, get all docs
         await masterDB.get('invoice').then((doc) => {
@@ -95,8 +99,10 @@ export default function InvoiceForm() {
       console.log({ doc })
       let newDataArray = doc.dataArray;
       // appending new values to previous data array
+      values.product[0].image = image;
       newDataArray.push(values)
       console.log({ newDataArray })
+      doc.dataArray = newDataArray
       // update masterDB
       await masterDB.put(doc)
     });
