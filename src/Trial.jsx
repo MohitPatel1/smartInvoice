@@ -46,9 +46,10 @@ function Trial() {
             </View>
             <View style={{marginLeft:400}}>
               <Text style={{marginTop:-85,}}>Name:</Text>
-              <Text style={{}}>Address:</Text>
-              <Text style={{}}>Ph-no:</Text>
+              <Text>Address:</Text>
+              <Text>Ph-no:</Text>
             </View>
+            <View style={{marginLeft:410}}><Text style={{marginTop:605}}>Total Amt:</Text></View>
             <View style={{border:1,marginTop:600}}>
             </View>
             <View style={{marginTop:-600,marginLeft:400}}>
@@ -63,13 +64,13 @@ function Trial() {
           <Text style={{marginLeft:10}}>Image</Text>
           </View>
           <View style={{marginLeft:220,marginTop:-18}}> 
-          <Text style={{}}>Qt</Text>
+          <Text>Qt</Text>
           </View>
           <View style={{marginLeft:330, marginTop:-20}}>
-          <Text style={{}}>Price</Text>
+          <Text>Price</Text>
           </View>
           <View style={{marginLeft:450,marginTop:-21}}>
-          <Text style={{}}>Amount</Text>
+          <Text>Amount</Text>
           </View>
           <View style={{marginTop:400}}></View>
         </View>
