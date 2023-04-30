@@ -78,10 +78,10 @@ input[type="data"] {
   width: 100%;
 }
 
-#imageUpload {
+/* #imageUpload {
   font-size: small;
   margin-bottom: 10px;
-}
+} */
 
 .addbuyer-button,
 .search {

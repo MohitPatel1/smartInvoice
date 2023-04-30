@@ -14,8 +14,9 @@ export default function InvoiceForm() {
   // let methods = useForm();
   const form = useForm({
     defaultValues: {
+      date: new Date().toISOString(),
       product: [{
-        image: null,
+        image: '',
         id: '',
         name: '',
         quantity: 0,
@@ -151,7 +152,7 @@ export default function InvoiceForm() {
         </Button>
       </div>
       <div id='date'>
-        <input style={{direction:'flex-end'}} type="date" />
+        <input style={{ direction: 'flex-end' }} type="date" />
       </div>
       <div className='products-container'>
         <h1>Products</h1>
@@ -163,11 +164,11 @@ export default function InvoiceForm() {
                   <h3>Product {index + 1}</h3>
 
                   <div className="form-control">
-                    <label id="imageUpload" htmlFor="imageUpload">Upload an image:</label>
+                    <label style={{ width: 'auto', fontSize: '16px' }} id="imageUpload" htmlFor="imageUpload">Upload an image:</label>
                     <input
                       id="imageUpload"
                       type="file"
-                      accept="image/*"                      
+                      accept="image/*"
                       onChange={(e) => {
                         const fileReader = new FileReader();
                         fileReader.onload = () => {
@@ -178,17 +179,18 @@ export default function InvoiceForm() {
                         fileReader.readAsDataURL(e.target.files[0]);
                       }}
                     />
+                    <br />
+                    <br />
                     {image ? (
-                    <img                     
-                      src={image}
-                      alt="image"
-                      width={'50px'}
-                    />
-                  ) : (
-                    ""
-                  )}
+                      <img
+                        src={image}
+                        alt="image"
+                        width={'350px'}
+                      />
+                    ) : (
+                      ""
+                    )}
                   </div>
-
 
                   <div className="form-control">
                     <label htmlFor="productId">Id:</label>
@@ -209,7 +211,7 @@ export default function InvoiceForm() {
 
                   <div className="form-control">
                     <label htmlFor="productSize">Size:</label>
-                    <select id={`productSize-${index}`} {...register(`product.${index}.size`, {
+                    <select style={{ width: '275px', height: '30px', textAlign: 'center' }} id={`productSize-${index}`} {...register(`product.${index}.size`, {
                     })}>
                       <option value="">-- Select Size --</option>
                       <option value="XS">28</option>
