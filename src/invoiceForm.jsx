@@ -7,6 +7,7 @@ import { useForm, FormProvider, useFormContext, useFieldArray } from "react-hook
 import getMasterDB from './database/getMasterDB';
 // material UI
 import { Autocomplete, Button, TextField } from '@mui/material';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 // react router dom
 import { useNavigate } from "react-router-dom";
 
@@ -67,9 +68,9 @@ export default function InvoiceForm() {
           // if database is empty, set data to empty array in invoice _id
           if (doc.total_rows == 0) {
             await masterDB.put({
-                _id: 'invoice',
-                dataArray: []
-              });
+              _id: 'invoice',
+              dataArray: []
+            });
             await masterDB.put({
               _id: 'buyers',
               buyerList: []
@@ -77,7 +78,7 @@ export default function InvoiceForm() {
           };
         });
         await masterDB.allDocs().then((allDocs) => {
-          console.log({allDocs})
+          console.log({ allDocs })
         })
         // if database have one invoice in it, get all docs
         await masterDB.get('invoice').then((doc) => {
@@ -100,6 +101,7 @@ export default function InvoiceForm() {
       let newDataArray = doc.dataArray;
       // appending new values to previous data array
       values.product[0].image = image;
+      values.date = selectedDate;
       newDataArray.push(values)
       console.log({ newDataArray })
       doc.dataArray = newDataArray
@@ -141,6 +143,9 @@ export default function InvoiceForm() {
     setValue('total', temp)
   }
 
+  // for date mui
+  const [selectedDate, setSelectedDate] = useState(new Date().toISOString())
+
   return (
     <form id='form' onSubmit={handleSubmit(onSubmit)} noValidate>
       <div id='buyer-select'>
@@ -157,9 +162,15 @@ export default function InvoiceForm() {
           Add Buyer
         </Button>
       </div>
-      <div id='date'>
-        <input style={{ direction: 'flex-end' }} type="date" />
-      </div>
+      <br />
+
+      <DatePicker id='date' label='Date' renderInput={(params) => <TextField {...params} />}
+        value={selectedDate}
+        onChange={(newValue) => {
+          setSelectedDate(newValue.toISOString())
+        }}
+      />
+
       <div className='products-container'>
         <h1>Products</h1>
         <div>
