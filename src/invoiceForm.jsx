@@ -14,6 +14,7 @@ export default function InvoiceForm() {
   // let methods = useForm();
   const form = useForm({
     defaultValues: {
+      date: new Date().toISOString(),
       product: [{
         image: '',
         id: '',
