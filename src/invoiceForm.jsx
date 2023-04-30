@@ -53,6 +53,9 @@ export default function InvoiceForm() {
     }
   }, [isSubmitSuccessful, reload])
 
+  // for buyerOptions
+  const [buyerOptions, setBuyerOptions] = useState([])
+
   useEffect(() => {
     const getData = async () => {
       // if master database is not created, create one and store it in masterDB
@@ -86,10 +89,24 @@ export default function InvoiceForm() {
           let invoiceArray = doc.dataArray;
           console.log({ invoiceArray });
         })
+        await masterDB.get('buyers').then((doc) => {
+          console.log({doc})
+          let buyerList = doc.buyerList;
+          console.log({ buyerList });
+          const arr = buyerList.map((buyer) => {
+            const { companyName } = buyer;
+            return companyName;
+          })
+          console.log({ arr })
+          setBuyerOptions(arr);
+          
+        });
       }
     }
     getData();
   }, [masterDB, reload])
+
+console.log({ buyerOptions })
 
   // when form is submitted, append data to pouchDB
   const onSubmit = async (values) => {
@@ -151,12 +168,11 @@ export default function InvoiceForm() {
       <div id='buyer-select'>
         <Autocomplete className='search'
           id="grouped-demo"
-          options={[]}
+          options={buyerOptions}
           groupBy={(option) => option.firstLetter}
-          getOptionLabel={(option) => option.title}
+          getOptionLabel={(option) => option}
           sx={{ width: 300 }}
           renderInput={(params) => <TextField {...params} label="Existing Buyers" />}
-
         />
         <Button className='addbuyer-button' id='addbuyer-button' variant="outlined" onClick={() => navigate("/addBuyer")}>
           Add Buyer
@@ -286,9 +302,6 @@ export default function InvoiceForm() {
           })}>Add product</Button>
         </div>
       </div>
-
-
-
 
       <div className="form-control">
         <label htmlFor="total">Total:</label>
