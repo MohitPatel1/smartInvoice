@@ -9,6 +9,7 @@ import getMasterDB from './database/getMasterDB';
 import { Autocomplete, Button, TextField } from '@mui/material';
 // react router dom
 import { useNavigate } from "react-router-dom";
+import InvoicePdf from './invoicePdf';
 
 export default function InvoiceForm() {
   // let methods = useForm();
@@ -33,7 +34,8 @@ export default function InvoiceForm() {
   const { onChange } = useFormContext();
 
   const [masterDB, setMasterDB] = useState();
-  const [reload, reloadPage] = useState()
+  const [reload, reloadPage] = useState();
+  const [ showPdf , setShowPdf ] = useState(false);
   const { register, handleSubmit, formState, watch, reset, control, setValue, getValues } = form;
   const navigate = useNavigate();
   const { errors, isSubmitSuccessful, isValid, isSubmitting } = formState;
@@ -107,19 +109,10 @@ export default function InvoiceForm() {
       await masterDB.put(doc)
     });
     setImage('')
+    setShowPdf(true)
   }
 
   const [image, setImage] = useState();
-
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-
-    if (file && file.type.includes('image/')) {
-      setImage(file);
-    } else {
-      alert('Please select an image file.');
-    }
-  }
 
   const changeAmount = (e, index) => {
     const data = getValues()
@@ -185,7 +178,6 @@ export default function InvoiceForm() {
                         fileReader.readAsDataURL(e.target.files[0]);
                       }}
                     />
-                    <br />
                     <br />
                     {image ? (
                       <img
@@ -289,6 +281,13 @@ export default function InvoiceForm() {
       <Button type='submit' variant="contained" disabled={!isValid || isSubmitting} color="success">
         Submit
       </Button>
+      {
+        (showPdf)?(
+          <InvoicePdf/>
+        ) : (
+          <></>
+        )
+      }
     </form>
   );
 }
