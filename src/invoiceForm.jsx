@@ -95,12 +95,12 @@ export default function InvoiceForm() {
           console.log({doc})
           let buyerList = doc.buyerList;
           console.log({ buyerList });
-          const arr = buyerList.map((buyer) => {
-            const { companyName } = buyer;
-            return companyName;
-          })
-          console.log({ arr })
-          setBuyerOptions(arr);
+          // const arr = buyerList.map((buyer) => {
+          //   const { companyName } = buyer;
+          //   return companyName;
+          // })
+          // console.log({ arr })
+          setBuyerOptions(buyerList);
           
         });
       }
@@ -156,15 +156,24 @@ console.log({ buyerOptions })
   // for date mui
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString())
 
+  // for selected option
+  const [selectedOption, setSelectedOption] = useState(null);
+  const handleOptionSelected = (event, newValue) => {
+    setSelectedOption(newValue);
+  }
+
+  // console.log({selectedOption})
+
   return (
     <form id='form' onSubmit={handleSubmit(onSubmit)} noValidate>
       <div id='buyer-select'>
         <Autocomplete className='search'
           id="grouped-demo"
           options={buyerOptions}
-          groupBy={(option) => option.firstLetter}
-          getOptionLabel={(option) => option}
+          groupBy={(option) => option.companyName.firstLetter}
+          getOptionLabel={(option) => option.companyName}
           sx={{ width: 300 }}
+          onChange={handleOptionSelected}
           renderInput={(params) => <TextField {...params} label="Existing Buyers" />}
         />
         <Button className='addbuyer-button' id='addbuyer-button' variant="outlined" onClick={() => navigate("/addBuyer")}>
